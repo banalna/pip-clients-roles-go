@@ -1,0 +1,7 @@
+{
+  "name": "pip-clients-roles-go",
+  "registry": "pipdevs/pip-clients-roles-go",
+  "repository": "github.com/pip-services-users/pip-clients-roles-go",
+  "version": "1.0.0",
+  "build": null
+}
