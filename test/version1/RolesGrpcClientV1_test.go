@@ -8,10 +8,16 @@ import (
 	"github.com/pip-services3-go/pip-services3-commons-go/config"
 )
 
-var client *version1.RoleGrpcClientV1
-var fixture *RolesClientFixtureV1
+type rolesGrpcCommandableClientV1Test struct {
+	client  *version1.RoleGrpcClientV1
+	fixture *RolesClientFixtureV1
+}
 
-func setup(t *testing.T) *RolesClientFixtureV1 {
+func newRolesGrpcCommandableClientV1Test() *rolesGrpcCommandableClientV1Test {
+	return &rolesGrpcCommandableClientV1Test{}
+}
+
+func (c *rolesGrpcCommandableClientV1Test) setup(t *testing.T) *RolesClientFixtureV1 {
 	var GRPC_HOST = os.Getenv("GRPC_HOST")
 	if GRPC_HOST == "" {
 		GRPC_HOST = "localhost"
@@ -27,36 +33,39 @@ func setup(t *testing.T) *RolesClientFixtureV1 {
 		"connection.port", GRPC_PORT,
 	)
 
-	client = version1.NewRoleGrpcClientV1()
-	client.Configure(httpConfig)
-	client.Open("")
+	c.client = version1.NewRoleGrpcClientV1()
+	c.client.Configure(httpConfig)
+	c.client.Open("")
 
-	fixture = NewRolesClientFixtureV1(client)
+	c.fixture = NewRolesClientFixtureV1(c.client)
 
-	return fixture
+	return c.fixture
 }
 
-func teardown(t *testing.T) {
-	client.Close("")
+func (c *rolesGrpcCommandableClientV1Test) teardown(t *testing.T) {
+	c.client.Close("")
 }
 
 func TestGetAndSetRoles(t *testing.T) {
-	fixture := setup(t)
-	defer teardown(t)
+	c := newRolesGrpcCommandableClientV1Test()
+	fixture := c.setup(t)
+	defer c.teardown(t)
 
 	fixture.TestGetAndSetRoles(t)
 }
 
 func TestGrantAndRevokeRoles(t *testing.T) {
-	fixture := setup(t)
-	defer teardown(t)
+	c := newRolesGrpcCommandableClientV1Test()
+	fixture := c.setup(t)
+	defer c.teardown(t)
 
 	fixture.TestGrantAndRevokeRoles(t)
 }
 
 func TestAuthorize(t *testing.T) {
-	fixture := setup(t)
-	defer teardown(t)
+	c := newRolesGrpcCommandableClientV1Test()
+	fixture := c.setup(t)
+	defer c.teardown(t)
 
 	fixture.TestAuthorize(t)
 }

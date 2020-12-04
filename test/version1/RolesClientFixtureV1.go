@@ -22,10 +22,11 @@ func NewRolesClientFixtureV1(client version1.IRolesClientV1) *RolesClientFixture
 
 func (c *RolesClientFixtureV1) clear() {
 	page, _ := c.Client.GetRolesByFilter("", nil, nil)
-
-	for _, v := range page.Data {
-		roles := v.(*version1.UserRolesV1)
-		c.Client.RevokeRoles("", roles.Id, roles.Roles)
+	if page != nil {
+		for _, v := range page.Data {
+			roles := v.(*version1.UserRolesV1)
+			c.Client.RevokeRoles("", roles.Id, roles.Roles)
+		}
 	}
 }
 
